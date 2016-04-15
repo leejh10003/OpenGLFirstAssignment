@@ -27,6 +27,7 @@ private:
 class Face {
 	Face(const Vertex3D (&input)[3]){
 		for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
+		getCenterOfGravity();
 	}
 private:
 	void getCenterOfGravity() {
