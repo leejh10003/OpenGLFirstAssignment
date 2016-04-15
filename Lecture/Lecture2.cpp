@@ -4,14 +4,22 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+using namespace std;
 class Vertex3D{
 public:
 	Vertex3D() : x(0.0f), y(0.0f), z(0.0f) {}
 	Vertex3D(float xInput, float yInput, float zInput):x(xInput), y(yInput), z(zInput) {}
-	Vertex3D(const Vertex3D &input) {
+	Vertex3D(const Vertex3D &input)
+	{
 		x = input.getX();
 		y = input.getY();
 		z = input.getZ();
+	}
+	Vector3D operator-(const Vertex3D& latter)
+	{
+		return Vector3D(x - latter.getX(),
+			y - latter.getY(),
+			z - latter.getZ());
 	}
 	float getX() const { return x; }
 	float getY() const { return y; }
@@ -24,13 +32,28 @@ private:
 	float y;
 	float z;
 };
+class Vector3D {
+public:
+	Vector3D():x(0.0f), y(0.0f), z(0.0f) {}
+	Vector3D(float x, float y, float z) :x(x), y(y), z(z) {}
+private:
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+};
+
 class Face {
-	Face(const Vertex3D (&input)[3]){
+	Face(const Vertex3D (&input)[3])
+	{
 		for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
 		getCenterOfGravity();
 	}
 private:
-	void getCenterOfGravity() {
+	Vertex3D vertices[3];
+	Vertex3D centerOfGravity;
+	Vector3D normal;
+	void getCenterOfGravity()
+	{
 		float x = 0.0f;
 		float y = 0.0f;
 		float z = 0.0f;
@@ -39,10 +62,13 @@ private:
 			y += vertices[i].getY();
 			z += vertices[i].getZ();
 		}
-		centerOfGravity = Vertex3D(x/3.0f, y/3.0f, z/3.0f);
+		centerOfGravity = Vertex3D(x / 3.0f, y / 3.0f, z / 3.0f);
 	}
-	Vertex3D vertices[3];
-	Vertex3D centerOfGravity;
+	void getNormalVector()
+	{
+		Vector3D former = vertices[1] - vertices[0];
+		Vector3D latter = vertices[2] - vertices[0];
+	}
 };
 class Tetrahedron
 {
@@ -77,7 +103,6 @@ public:
 private:
 	Vertex3D vertices[4];
 };
-using namespace std;
 
 void Render(void)
 {
