@@ -36,6 +36,14 @@ class Vector3D {
 public:
 	Vector3D():x(0.0f), y(0.0f), z(0.0f) {}
 	Vector3D(float x, float y, float z) :x(x), y(y), z(z) {}
+	Vector3D crossWith(Vector3D &input){
+		return Vector3D(y*input.getZValue() - z*input.getYValue(),
+			z*input.getXValue() - x*getZValue(),
+			x*input.getYValue() - y*input.getXValue());
+	}
+	float getXValue() { return x; }
+	float getYValue() { return y; }
+	float getZValue() { return z; }
 private:
 	float x = 0.0f;
 	float y = 0.0f;
