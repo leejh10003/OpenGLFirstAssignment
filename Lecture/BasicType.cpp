@@ -76,3 +76,49 @@ Vector3D crossProduct(const Vector3D &former, const Vector3D &latter)
 					former.getZ()*latter.getX() - former.getX()*latter.getZ(),
 					former.getX()*latter.getY() - former.getY()*latter.getX());
 }
+Face::Face(const Vertex3D(&input)[3])
+{
+	for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
+	getCenterOfGravity();
+	getNormalVector();
+}
+Face::Face()
+{
+	for (int i = 0; i < 3; i++) { vertices[i] = Vertex3D(0.0f, 0.0f, 0.0f); }
+}
+void Face::getCenterOfGravity()
+{
+	float x = 0.0f;
+	float y = 0.0f;
+	float z = 0.0f;
+	for (int i = 0; i < 3; i++) {
+		x += vertices[i].getX();
+		y += vertices[i].getY();
+		z += vertices[i].getZ();
+	}
+	centerOfGravity = Vertex3D(x / 3.0f, y / 3.0f, z / 3.0f);
+}
+void Face::getNormalVector()
+{
+	Vector3D former = vertices[1] - vertices[0];
+	Vector3D latter = vertices[2] - vertices[0];
+	normal = crossProduct(former, latter);
+}
+void Face::renderIt()
+{
+	for (int i = 0; i < 3; i++)
+		glVertex3f(vertices[i].getX(),vertices[i].getY(), vertices[i].getZ());
+}
+void Tetrahedron::renderIt()
+{
+	glBegin(GL_TRIANGLES);
+	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
+	faces[0].renderIt();
+	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
+	faces[1].renderIt();
+	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
+	faces[2].renderIt();
+	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
+	faces[3].renderIt();
+	glEnd();
+}

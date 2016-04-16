@@ -16,11 +16,8 @@ void Render(void)
 							 Vertex3D(0.0f,-5.0f,-5.0f),
 							 Vertex3D(-5.0f,-5.0f,0.0f) };
 	Tetrahedron exampleTetrahdron(vertices);
-
-	// 여기에 코드를 작성하십시오.
-	glBegin(GL_TRIANGLES);
+	
 	exampleTetrahdron.renderIt();
-	glEnd();
 
 	glutSwapBuffers();
 }
@@ -108,6 +105,7 @@ int main(int argc, char ** argv)
 	glutCreateWindow("2014210078_이준혁");
 
 	glEnable(GL_DEPTH_TEST | GL_BLEND);
+	glDepthFunc(GL_GREATER);
 	glutDisplayFunc(Render);
 	glutReshapeFunc(Reshape);
 

@@ -47,57 +47,21 @@ public:
 };
 Vector3D crossProduct(const Vector3D &former, const Vector3D &latter);
 class Face {
-	Face(const Vertex3D(&input)[3])
-	{
-		for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
-		getCenterOfGravity();
-		getNormalVector();
-	}
+public:
+	Face(const Vertex3D(&input)[3]);
+	Face();
+	void renderIt();
 private:
 	Vertex3D vertices[3];
 	Vertex3D centerOfGravity;
 	Vector3D normal;
-	void getCenterOfGravity()
-	{
-		float x = 0.0f;
-		float y = 0.0f;
-		float z = 0.0f;
-		for (int i = 0; i < 3; i++) {
-			x += vertices[i].getX();
-			y += vertices[i].getY();
-			z += vertices[i].getZ();
-		}
-		centerOfGravity = Vertex3D(x / 3.0f, y / 3.0f, z / 3.0f);
-	}
-	void getNormalVector()
-	{
-		Vector3D former = vertices[1] - vertices[0];
-		Vector3D latter = vertices[2] - vertices[0];
-		normal = crossProduct(former, latter);
-	}
+	void getCenterOfGravity();
+	void getNormalVector();
 };
 class Tetrahedron
 {
 public:
-	void renderIt()
-	{
-		glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-		glVertex3f(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ());
-		glVertex3f(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ());
-		glVertex3f(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ());
-		glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-		glVertex3f(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ());
-		glVertex3f(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ());
-		glVertex3f(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ());
-		glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-		glVertex3f(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ());
-		glVertex3f(vertices[2].getX(), vertices[2].getY(), vertices[2].getZ());
-		glVertex3f(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ());
-		glColor4f(1.0f, 1.0f, 0.0f, 0.0f);
-		glVertex3f(vertices[0].getX(), vertices[0].getY(), vertices[0].getZ());
-		glVertex3f(vertices[1].getX(), vertices[1].getY(), vertices[1].getZ());
-		glVertex3f(vertices[3].getX(), vertices[3].getY(), vertices[3].getZ());
-	}
+	void renderIt();
 	Tetrahedron(Vertex3D(&inputVertices)[4])
 	{
 		for (int i = 0; i < 4; i++) {
@@ -105,6 +69,10 @@ public:
 			vertices[i].setY(inputVertices[i].getY());
 			vertices[i].setZ(inputVertices[i].getZ());
 		}
+		faces[0] = Face({ vertices[0], vertices[1], vertices[2] });
+		faces[1] = Face({ vertices[0], vertices[2], vertices[3] });
+		faces[2] = Face({ vertices[0], vertices[3], vertices[1] });
+		faces[3] = Face({ vertices[1], vertices[3], vertices[2] });
 	}
 private:
 	Vertex3D vertices[4];
