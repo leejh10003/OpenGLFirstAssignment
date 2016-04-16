@@ -1,4 +1,3 @@
-
 #include <Windows.h>
 #include <iostream>
 #include <GL/glut.h>
@@ -15,11 +14,38 @@ public:
 		y = input.getY();
 		z = input.getZ();
 	}
-	Vector3D operator-(const Vertex3D& latter)
+	Vector3D operator-(const Vertex3D& latter) const 
 	{
 		return Vector3D(x - latter.getX(),
-			y - latter.getY(),
-			z - latter.getZ());
+						y - latter.getY(),
+						z - latter.getZ());
+	}
+	Vertex3D operator-(const Vector3D& latter) const
+	{
+		return Vertex3D(x - latter.getX(),
+						y - latter.getY(),
+						z - latter.getZ());
+	}
+	Vertex3D operator+(const Vector3D& latter) const
+	{
+
+		return Vertex3D(x + latter.getX(),
+						y + latter.getY(),
+						z + latter.getZ());
+	}
+	Vertex3D& operator-=(const Vector3D& latter)
+	{
+		x -= latter.getX();
+		y -= latter.getY();
+		z -= latter.getZ();
+		return (*this);
+	}
+	Vertex3D& operator+=(const Vector3D& latter)
+	{
+		x += latter.getX();
+		y += latter.getY();
+		z += latter.getZ();
+		return (*this);
 	}
 	float getX() const { return x; }
 	float getY() const { return y; }
@@ -36,25 +62,46 @@ class Vector3D {
 public:
 	Vector3D():x(0.0f), y(0.0f), z(0.0f) {}
 	Vector3D(float x, float y, float z) :x(x), y(y), z(z) {}
-	Vector3D crossWith(Vector3D &input){
-		return Vector3D(y*input.getZValue() - z*input.getYValue(),
-			z*input.getXValue() - x*getZValue(),
-			x*input.getYValue() - y*input.getXValue());
+	Vector3D operator+(const Vector3D &latter) const
+	{
+		return Vector3D(x + latter.getX(),
+						y + latter.getY(),
+						z + latter.getZ());
 	}
-	float getXValue() { return x; }
-	float getYValue() { return y; }
-	float getZValue() { return z; }
+	Vertex3D operator+(const Vertex3D &latter) const
+	{
+		return Vertex3D(x + latter.getX(),
+						y + latter.getY(),
+						z + latter.getZ());
+	}
+	Vector3D operator-(const Vector3D &latter) const 
+	{
+		return Vector3D(x - latter.getX(),
+						y - latter.getY(),
+						z - latter.getZ());
+	}
+	float operator*(const Vector3D &latter) const { return x*latter.getX() + y*latter.getY() + z*latter.getZ(); }
+	float getX() const { return x; }
+	float getY() const { return y; }
+	float getZ() const { return z; }
 private:
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
 };
+Vector3D crossProduct(const Vector3D &former, const Vector3D &latter)
+{
+	return Vector3D(former.getY()*latter.getZ() - former.getZ()*latter.getY(),
+					former.getZ()*latter.getX() - former.getX()*latter.getZ(),
+					former.getX()*latter.getY() - former.getY()*latter.getX());
+}
 
 class Face {
 	Face(const Vertex3D (&input)[3])
 	{
 		for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
 		getCenterOfGravity();
+		getNormalVector();
 	}
 private:
 	Vertex3D vertices[3];
@@ -76,6 +123,7 @@ private:
 	{
 		Vector3D former = vertices[1] - vertices[0];
 		Vector3D latter = vertices[2] - vertices[0];
+		normal = crossProduct(former, latter);
 	}
 };
 class Tetrahedron
@@ -110,6 +158,7 @@ public:
 	}
 private:
 	Vertex3D vertices[4];
+	Face faces[4];
 };
 
 void Render(void)
