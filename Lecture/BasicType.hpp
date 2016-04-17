@@ -43,6 +43,7 @@ public:
 	Vertex3D operator+(const Vertex3D &latter) const;
 	Vector3D operator-(const Vector3D &latter) const;
 	float operator*(const Vector3D &latter) const;
+	Vector3D operator*(const float &latter) const;
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -53,13 +54,19 @@ class Face
 private:
 	Vertex3D vertices[3];
 	Vertex3D centerOfGravity;
+	Vertex3D endOfNormalVector;
 	Vector3D normal;
-	void getCenterOfGravity();
-	void getNormalVector();
+	Vector3D normalizedNormal;
+	float faceColor[4];
 public:
-	Face(const Vertex3D(&input)[3]);
+	Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4]);
 	Face();
 	void renderIt();
+private:
+	void getCenterOfGravity();
+	void getNormalVector();
+	void getNormalVectorNormalized();
+	void getEndOfNormalVector();
 };
 class Tetrahedron
 {

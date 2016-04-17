@@ -1,3 +1,5 @@
+#include <cmath>
+#include <iostream>
 #include "BasicType.hpp"
 Vertex3D::Vertex3D() : x(0.0f), y(0.0f), z(0.0f) {}
 Vertex3D::Vertex3D(float xInput, float yInput, float zInput) :x(xInput), y(yInput), z(zInput) {}
@@ -67,6 +69,7 @@ Vector3D Vector3D::operator-(const Vector3D &latter) const
 		z - latter.getZ());
 }
 float Vector3D::operator*(const Vector3D &latter) const { return x*latter.getX() + y*latter.getY() + z*latter.getZ(); }
+Vector3D Vector3D::operator*(const float &latter) const { return Vector3D(x*latter, y*latter, z*latter); }
 float Vector3D::getX() const { return x; }
 float Vector3D::getY() const { return y; }
 float Vector3D::getZ() const { return z; }
@@ -76,11 +79,14 @@ Vector3D crossProduct(const Vector3D &former, const Vector3D &latter)
 					former.getZ()*latter.getX() - former.getX()*latter.getZ(),
 					former.getX()*latter.getY() - former.getY()*latter.getX());
 }
-Face::Face(const Vertex3D(&input)[3])
+Face::Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4])
 {
 	for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
+	for (int i = 0; i < 4; i++) { faceColor[i] = givenFaceColor[i]; }
 	getCenterOfGravity();
 	getNormalVector();
+	getNormalVectorNormalized();
+	getEndOfNormalVector();
 }
 Face::Face()
 {
@@ -104,10 +110,31 @@ void Face::getNormalVector()
 	Vector3D latter = vertices[2] - vertices[0];
 	normal = crossProduct(former, latter);
 }
+void Face::getNormalVectorNormalized()
+{
+	float x = normal.getX();
+	float y = normal.getY();
+	float z = normal.getZ();
+	float size = sqrt(pow(x, 2.0) + pow(y, 2.0) + pow(z, 2.0));
+	normalizedNormal = Vector3D(x/size, y/size, z/size);
+}
+void Face::getEndOfNormalVector()
+{
+	endOfNormalVector = centerOfGravity + normalizedNormal * 2.0;
+}
 void Face::renderIt()
 {
+	glBegin(GL_TRIANGLES);
+	glColor4f(faceColor[0], faceColor[1], faceColor[2], faceColor[3]);
 	for (int i = 0; i < 3; i++)
 		glVertex3f(vertices[i].getX(),vertices[i].getY(), vertices[i].getZ());
+	glEnd();
+	glLineWidth(5.0f);
+	glBegin(GL_LINES);
+	glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
+	glVertex3f(centerOfGravity.getX(), centerOfGravity.getY(), centerOfGravity.getZ());
+	glVertex3f(endOfNormalVector.getX(), endOfNormalVector.getY(), endOfNormalVector.getZ());
+	glEnd();
 }
 Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4])
 {
@@ -116,27 +143,13 @@ Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4])
 		vertices[i].setY(inputVertices[i].getY());
 		vertices[i].setZ(inputVertices[i].getZ());
 	}
-	faces[0] = Face({ vertices[0], vertices[1], vertices[2] });
-	faces[1] = Face({ vertices[0], vertices[2], vertices[3] });
-	faces[2] = Face({ vertices[0], vertices[3], vertices[1] });
-	faces[3] = Face({ vertices[1], vertices[3], vertices[2] });
+	faces[0] = Face({ vertices[0], vertices[1], vertices[2] }, { 1.0f, 0.0f, 0.0f, 1.0f });
+	faces[1] = Face({ vertices[0], vertices[2], vertices[3] }, { 0.0f, 1.0f, 0.0f, 1.0f });
+	faces[2] = Face({ vertices[0], vertices[3], vertices[1] }, { 0.0f, 0.0f, 1.0f, 1.0f });
+	faces[3] = Face({ vertices[1], vertices[3], vertices[2] }, { 1.0f, 1.0f, 0.0f, 1.0f });
 }
 void Tetrahedron::renderIt()
 {
-	glBegin(GL_TRIANGLES);
-	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
-	faces[0].renderIt();
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
-	faces[1].renderIt();
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
-	faces[2].renderIt();
-	glEnd();
-	glBegin(GL_TRIANGLES);
-	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
-	faces[3].renderIt();
-	glEnd();
+	for (int i = 0; i < 4; i++)
+		faces[i].renderIt();
 }
