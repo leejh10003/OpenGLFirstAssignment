@@ -109,6 +109,18 @@ void Face::renderIt()
 	for (int i = 0; i < 3; i++)
 		glVertex3f(vertices[i].getX(),vertices[i].getY(), vertices[i].getZ());
 }
+Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4])
+{
+	for (int i = 0; i < 4; i++) {
+		vertices[i].setX(inputVertices[i].getX());
+		vertices[i].setY(inputVertices[i].getY());
+		vertices[i].setZ(inputVertices[i].getZ());
+	}
+	faces[0] = Face({ vertices[0], vertices[1], vertices[2] });
+	faces[1] = Face({ vertices[0], vertices[2], vertices[3] });
+	faces[2] = Face({ vertices[0], vertices[3], vertices[1] });
+	faces[3] = Face({ vertices[1], vertices[3], vertices[2] });
+}
 void Tetrahedron::renderIt()
 {
 	glBegin(GL_TRIANGLES);
