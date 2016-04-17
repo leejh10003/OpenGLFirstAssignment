@@ -10,10 +10,10 @@ void Render(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();	
-	gluLookAt(0.0f, 0.0f, 20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
+	gluLookAt(0.0f, 0.0f, 30.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
 							 Vertex3D(0.0f,5.0f,0.0f),
-							 Vertex3D(0.0f,-5.0f,-5.0f),
+							 Vertex3D(0.0f,-5.0f,5.0f),
 							 Vertex3D(-5.0f,-5.0f,0.0f) };
 	Tetrahedron exampleTetrahdron(vertices);
 	
@@ -104,8 +104,11 @@ int main(int argc, char ** argv)
 	//Window 제목은 학번과 학생 이름으로 작성하십시오.
 	glutCreateWindow("2014210078_이준혁");
 
-	glEnable(GL_DEPTH_TEST | GL_BLEND);
-	glDepthFunc(GL_GREATER);
+	glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+	glClearDepth(1.0f);
+	glEnable(GL_DEPTH_TEST);
+	glEnable(GL_BLEND);
+	glDepthFunc(GL_LEQUAL);
 	glutDisplayFunc(Render);
 	glutReshapeFunc(Reshape);
 

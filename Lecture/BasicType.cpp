@@ -114,10 +114,14 @@ void Tetrahedron::renderIt()
 	glBegin(GL_TRIANGLES);
 	glColor4f(1.0f, 0.0f, 0.0f, 1.0f);
 	faces[0].renderIt();
+	glEnd();
+	glBegin(GL_TRIANGLES);
 	glColor4f(0.0f, 1.0f, 0.0f, 1.0f);
 	faces[1].renderIt();
+	glEnd();
 	glColor4f(0.0f, 0.0f, 1.0f, 1.0f);
 	faces[2].renderIt();
+	glBegin(GL_TRIANGLES);
 	glColor4f(1.0f, 1.0f, 0.0f, 1.0f);
 	faces[3].renderIt();
 	glEnd();
