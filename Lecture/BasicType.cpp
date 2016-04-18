@@ -87,6 +87,7 @@ Face::Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4])
 	getNormalVector();
 	getNormalVectorNormalized();
 	getEndOfNormalVector();
+	getD();
 }
 Face::Face()
 {
@@ -121,6 +122,10 @@ void Face::getNormalVectorNormalized()
 void Face::getEndOfNormalVector()
 {
 	endOfNormalVector = centerOfGravity + normalizedNormal * 2.0;
+}
+void Face::getD()
+{
+	d = -((centerOfGravity - Vertex3D(0.0f, 0.0f, 0.0f)) * normalizedNormal);
 }
 void Face::renderIt()
 {

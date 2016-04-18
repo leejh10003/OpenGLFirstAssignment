@@ -58,6 +58,7 @@ private:
 	Vector3D normal;
 	Vector3D normalizedNormal;
 	float faceColor[4];
+	float d;
 public:
 	Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4]);
 	Face();
@@ -67,6 +68,7 @@ private:
 	void getNormalVector();
 	void getNormalVectorNormalized();
 	void getEndOfNormalVector();
+	void getD();
 };
 class Tetrahedron
 {
