@@ -70,6 +70,12 @@ Vector3D Vector3D::operator-(const Vector3D &latter) const
 }
 float Vector3D::operator*(const Vector3D &latter) const { return x*latter.getX() + y*latter.getY() + z*latter.getZ(); }
 Vector3D Vector3D::operator*(const float &latter) const { return Vector3D(x*latter, y*latter, z*latter); }
+Vector3D Vector3D::normalize() const
+{
+	float length = this->length();
+	return Vector3D( x/length, y/length, z/length);
+}
+float Vector3D::length() const{	return sqrt(pow(x,2.0f) + pow(y, 2.0f) + pow(z, 2.0f)); }
 float Vector3D::getX() const { return x; }
 float Vector3D::getY() const { return y; }
 float Vector3D::getZ() const { return z; }
@@ -113,11 +119,7 @@ void Face::getNormalVector()
 }
 void Face::getNormalVectorNormalized()
 {
-	float x = normal.getX();
-	float y = normal.getY();
-	float z = normal.getZ();
-	float size = sqrt(pow(x, 2.0) + pow(y, 2.0) + pow(z, 2.0));
-	normalizedNormal = Vector3D(x/size, y/size, z/size);
+	normalizedNormal = normal.normalize();
 }
 void Face::getEndOfNormalVector()
 {
@@ -130,15 +132,15 @@ void Face::getD()
 void Face::renderIt()
 {
 	glBegin(GL_TRIANGLES);
-	glColor4f(faceColor[0], faceColor[1], faceColor[2], faceColor[3]);
-	for (int i = 0; i < 3; i++)
-		glVertex3f(vertices[i].getX(),vertices[i].getY(), vertices[i].getZ());
+		glColor4f(faceColor[0], faceColor[1], faceColor[2], faceColor[3]);
+		for (int i = 0; i < 3; i++)
+			glVertex3f(vertices[i].getX(),vertices[i].getY(), vertices[i].getZ());
 	glEnd();
 	glLineWidth(5.0f);
 	glBegin(GL_LINES);
-	glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
-	glVertex3f(centerOfGravity.getX(), centerOfGravity.getY(), centerOfGravity.getZ());
-	glVertex3f(endOfNormalVector.getX(), endOfNormalVector.getY(), endOfNormalVector.getZ());
+		glColor4f(0.0f, 1.0f, 1.0f, 1.0f);
+		glVertex3f(centerOfGravity.getX(), centerOfGravity.getY(), centerOfGravity.getZ());
+		glVertex3f(endOfNormalVector.getX(), endOfNormalVector.getY(), endOfNormalVector.getZ());
 	glEnd();
 }
 Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4])

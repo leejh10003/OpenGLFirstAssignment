@@ -44,6 +44,8 @@ public:
 	Vector3D operator-(const Vector3D &latter) const;
 	float operator*(const Vector3D &latter) const;
 	Vector3D operator*(const float &latter) const;
+	Vector3D normalize() const;
+	float length() const;
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -75,6 +77,7 @@ class Tetrahedron
 private:
 	Vertex3D vertices[4];
 	Face faces[4];
+	Vector3D edges[6];
 public:
 	void renderIt();
 	Tetrahedron(Vertex3D(&inputVertices)[4]);
