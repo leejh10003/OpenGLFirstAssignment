@@ -16,7 +16,20 @@ void Render(void)
 							 Vertex3D(0.0f,0.0f,5.0f),
 							 Vertex3D(-5.0f,-5.0f,0.0f)};
 	Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
-	
+	glLineWidth(1.0f);
+	glColor4f(1.0f, 1.0f,1.0f, 1.0f);
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(10.0f, 0.0f, 0.0f);
+	glEnd();
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 10.0f, 0.0f);
+	glEnd();
+	glBegin(GL_LINES);
+	glVertex3f(0.0f, 0.0f, 0.0f);
+	glVertex3f(0.0f, 0.0f, 10.0f);
+	glEnd();
 	exampleTetrahdron.renderIt();
 
 	glutSwapBuffers();
