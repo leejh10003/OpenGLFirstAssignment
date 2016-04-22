@@ -43,6 +43,15 @@ Vertex3D& Vertex3D::operator+=(const Vector3D& latter)
 	this->z += latter.getZ();
 	return (*this);
 }
+float Vertex3D::distanceTo(const Vertex3D& to) const
+{
+	Vector3D distance = (*this) - to;
+	return sqrt(pow(distance.getX(),2.0) + pow(distance.getY(), 2.0) + pow(distance.getZ(), 2.0));
+}
+Vertex3D Vertex3D::getNearOneBetween(const Vertex3D& former, const Vertex3D& latter) const
+{
+	return this->distanceTo(former) > this->distanceTo(latter) ? former : latter;
+}
 float Vertex3D::getX() const { return x; }
 float Vertex3D::getY() const { return y; }
 float Vertex3D::getZ() const { return z; }
@@ -85,7 +94,7 @@ Vector3D crossProduct(const Vector3D &former, const Vector3D &latter)
 					former.getZ()*latter.getX() - former.getX()*latter.getZ(),
 					former.getX()*latter.getY() - former.getY()*latter.getX());
 }
-Face::Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4])
+Face::Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4], const Vertex3D& opposed): opposed(opposed)
 {
 	for (int i = 0; i < 3; i++) { vertices[i] = input[i]; }
 	for (int i = 0; i < 4; i++) { faceColor[i] = givenFaceColor[i]; }
@@ -121,9 +130,13 @@ void Face::getNormalVectorNormalized()
 {
 	normalizedNormal = normal.normalize();
 }
+Vector3D Face::determineDirection()
+{
+	return opposed.getNearOneBetween(centerOfGravity + normalizedNormal, centerOfGravity - normalizedNormal) - centerOfGravity;
+}
 void Face::getEndOfNormalVector()
 {
-	endOfNormalVector = centerOfGravity + normalizedNormal * 2.0;
+	endOfNormalVector = centerOfGravity + determineDirection() * 2.0f;
 }
 void Face::getD()
 {
@@ -150,10 +163,10 @@ Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4])
 		vertices[i].setY(inputVertices[i].getY());
 		vertices[i].setZ(inputVertices[i].getZ());
 	}
-	faces[0] = Face({ vertices[0], vertices[1], vertices[2] }, { 1.0f, 0.0f, 0.0f, 1.0f });
-	faces[1] = Face({ vertices[0], vertices[2], vertices[3] }, { 0.0f, 1.0f, 0.0f, 1.0f });
-	faces[2] = Face({ vertices[0], vertices[3], vertices[1] }, { 0.0f, 0.0f, 1.0f, 1.0f });
-	faces[3] = Face({ vertices[1], vertices[3], vertices[2] }, { 1.0f, 1.0f, 0.0f, 1.0f });
+	faces[0] = Face({ vertices[0], vertices[1], vertices[2] }, { 1.0f, 0.0f, 0.0f, 1.0f }, vertices[3]);
+	faces[1] = Face({ vertices[0], vertices[2], vertices[3] }, { 0.0f, 1.0f, 0.0f, 1.0f }, vertices[1]);
+	faces[2] = Face({ vertices[0], vertices[3], vertices[1] }, { 0.0f, 0.0f, 1.0f, 1.0f }, vertices[2]);
+	faces[3] = Face({ vertices[1], vertices[3], vertices[2] }, { 1.0f, 1.0f, 0.0f, 1.0f }, vertices[0]);
 }
 void Tetrahedron::renderIt()
 {

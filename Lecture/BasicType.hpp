@@ -10,7 +10,7 @@ class Face;
 class Tetrahderon;
 class Vertex3D
 {
-private:
+protected:
 	float x;
 	float y;
 	float z;
@@ -23,6 +23,8 @@ public:
 	Vector3D operator-(const Vertex3D& latter) const;
 	Vertex3D& operator+=(const Vector3D& latter);
 	Vertex3D& operator-=(const Vector3D& latter);
+	float distanceTo(const Vertex3D& to) const;
+	Vertex3D getNearOneBetween(const Vertex3D& former, const Vertex3D& latter) const;
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -32,7 +34,7 @@ public:
 };
 class Vector3D
 {
-private:
+protected:
 	float x = 0.0f;
 	float y = 0.0f;
 	float z = 0.0f;
@@ -53,28 +55,30 @@ public:
 Vector3D crossProduct(const Vector3D &former, const Vector3D &latter);
 class Face
 {
-private:
+protected:
 	Vertex3D vertices[3];
 	Vertex3D centerOfGravity;
 	Vertex3D endOfNormalVector;
+	Vertex3D opposed;
 	Vector3D normal;
 	Vector3D normalizedNormal;
 	float faceColor[4];
 	float d;
 public:
-	Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4]);
+	Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4], const Vertex3D& opposed);
 	Face();
 	void renderIt();
-private:
+protected:
 	void getCenterOfGravity();
 	void getNormalVector();
 	void getNormalVectorNormalized();
+	Vector3D determineDirection();
 	void getEndOfNormalVector();
 	void getD();
 };
 class Tetrahedron
 {
-private:
+protected:
 	Vertex3D vertices[4];
 	Face faces[4];
 	Vector3D edges[6];
