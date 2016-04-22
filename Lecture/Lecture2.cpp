@@ -13,9 +13,9 @@ void Render(void)
 	gluLookAt(0.0f, 0.0f, 20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
 	Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
 							 Vertex3D(0.0f,5.0f,0.0f),
-							 Vertex3D(0.0f,-5.0f,5.0f),
-							 Vertex3D(-5.0f,-5.0f,0.0f) };
-	Tetrahedron exampleTetrahdron(vertices);
+							 Vertex3D(0.0f,0.0f,5.0f),
+							 Vertex3D(-5.0f,-5.0f,0.0f)};
+	Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
 	
 	exampleTetrahdron.renderIt();
 

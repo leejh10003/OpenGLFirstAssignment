@@ -1,6 +1,7 @@
 #pragma once
 #include <Windows.h>
 #include <iostream>
+#include <string>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -23,8 +24,11 @@ public:
 	Vector3D operator-(const Vertex3D& latter) const;
 	Vertex3D& operator+=(const Vector3D& latter);
 	Vertex3D& operator-=(const Vector3D& latter);
+	operator const Vector3D() const;
 	float distanceTo(const Vertex3D& to) const;
 	Vertex3D getNearOneBetween(const Vertex3D& former, const Vertex3D& latter) const;
+	float angleBetween(const Vertex3D& former, const Vertex3D& latter) const;
+	std::string getAngleInformation(const Vertex3D& former, const Vertex3D& latter) const;
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -62,12 +66,15 @@ protected:
 	Vertex3D opposed;
 	Vector3D normal;
 	Vector3D normalizedNormal;
+	Vector3D directionCorrectedNormal;
 	float faceColor[4];
 	float d;
 public:
 	Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4], const Vertex3D& opposed);
 	Face();
 	void renderIt();
+	float relationsBetweenVertex(const Vertex3D& with);
+	void printRelationshipBetweenEdge() const;
 protected:
 	void getCenterOfGravity();
 	void getNormalVector();
@@ -84,5 +91,6 @@ protected:
 	Vector3D edges[6];
 public:
 	void renderIt();
-	Tetrahedron(Vertex3D(&inputVertices)[4]);
+	Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne);
+	void Tetrahedron::printAngles() const;
 };
