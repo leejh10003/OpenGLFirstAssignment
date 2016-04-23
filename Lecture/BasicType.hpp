@@ -54,6 +54,7 @@ public:
 	Vertex3D& operator+=(const Vector3D& latter);
 	Vertex3D& operator-=(const Vector3D& latter);
 	operator const Vector3D() const;
+	operator const Matrix() const;
 	float distanceTo(const Vertex3D& to) const;
 	Vertex3D getNearOneBetween(const Vertex3D& former, const Vertex3D& latter) const;
 	float angleBetween(const Vertex3D& former, const Vertex3D& latter) const;
@@ -79,6 +80,7 @@ public:
 	Vector3D operator-(const Vector3D &latter) const;
 	float operator*(const Vector3D &latter) const;
 	Vector3D operator*(const float &latter) const;
+	operator const Matrix() const;
 	Vector3D normalize() const;
 	float length() const;
 	float getX() const;
@@ -118,9 +120,18 @@ protected:
 	Vertex3D vertices[4];
 	Face faces[4];
 	Vector3D edges[6];
+	Matrix originToTail(const Vertex3D & tail) const;
+	Matrix xzPlaneToAxis(const Vector3D & axis) const;
+	Matrix zAxisToXZPlane(const Vector3D & axis) const;
+	Matrix rotateInZAxis(const float radian) const;
+	Matrix xzPlaneToZAxis(const Vector3D& axis) const;
+	Matrix axisToXZPlane(const Vector3D& axis) const;
+	Matrix tailToOrigin(const Vertex3D& tail) const;
+	Matrix getRotationMatrix(const Vertex3D& head, const Vertex3D& tail, const float radian) const;
+	void generateFaces();
 public:
 	void renderIt();
 	Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne);
 	void Tetrahedron::printAngles() const;
-	void rotation();
+	void rotation(Vertex3D& head, Vertex3D& tail, const float radian);
 };

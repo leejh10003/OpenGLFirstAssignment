@@ -11,11 +11,12 @@ void Render(void)
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();	
 	gluLookAt(0.0f, 0.0f, 20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
+	static Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
 							 Vertex3D(0.0f,5.0f,0.0f),
 							 Vertex3D(0.0f,0.0f,5.0f),
 							 Vertex3D(-5.0f,-5.0f,0.0f)};
-	Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
+	static Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
+	exampleTetrahdron.rotation(vertices[0], vertices[1], 0.1);
 	glLineWidth(1.0f);
 	glColor4f(1.0f, 1.0f,1.0f, 1.0f);
 	glBegin(GL_LINES);
