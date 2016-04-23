@@ -183,7 +183,6 @@ Face::Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4], const Ver
 	determineDirection();
 	getD();
 	getEndOfNormalVector();
-	//cout << directionCorrectedNormal.getX() << "x + " << directionCorrectedNormal.getY() << "y + " << directionCorrectedNormal.getZ() << "z + " << d << endl;
 }
 Face::Face()
 {
@@ -317,8 +316,8 @@ Matrix Tetrahedron::xzPlaneToZAxis(const Vector3D & axis) const
 	float a = axis.getX();
 	float b = axis.getY();
 	float c = axis.getZ();
-	float d = sqrt(pow(b, 2.0) + pow(c, 2.0));
-	float l = sqrt(pow(a, 2.0) + pow(b, 2.0) + pow(c, 2.0));
+	float d = sqrt(pow(b, 2.0f) + pow(c, 2.0f));
+	float l = sqrt(pow(a, 2.0f) + pow(b, 2.0f) + pow(c, 2.0f));
 	if (l == 0.0f)
 		return Matrix({ { 1.0f, 0.0f, 0.0f, 0.0f },
 						{ 0.0f, 1.0f, 0.0f, 0.0f },
@@ -358,11 +357,35 @@ Matrix Tetrahedron::getRotationMatrix(const Vertex3D & head, const Vertex3D & ta
 	Vector3D axis = head - tail;
 	return tailToOrigin(tail) *
 		   axisToXZPlane(axis) *
-		   axisToXZPlane(axis) *
+		   xzPlaneToZAxis(axis) *
 		   rotateInZAxis(radian) *
 		   zAxisToXZPlane(axis) *
 		   xzPlaneToAxis(axis) *
-		   originToTail(tail);
+		   originToTail(tail)
+		;
+}
+Matrix Tetrahedron::getRotationOnAxisMatrix(unsigned char input, const float radian)
+{
+	float csin = cos(radian);
+	float sine = sin(radian);
+	switch (input)
+	{
+	case 'x':
+		return Matrix({ { csin,-sine, 0.0f, 0.0f },
+						{ sine, csin, 0.0f, 0.0f },
+						{ 0.0f, 0.0f, 1.0f, 0.0f },
+						{ 0.0f, 0.0f, 0.0f, 1.0f } });
+	case 'y':
+		return Matrix({ { 1.0f, 0.0f, 0.0f, 0.0f },
+						{ 0.0f, csin,-sine, 0.0f },
+						{ 0.0f, sine, csin, 0.0f },
+						{ 0.0f, 0.0f, 0.0f, 1.0f } });
+	case 'z':
+		return Matrix({ { csin, 0.0f, sine, 0.0f },
+						{ 0.0f, 1.0f, 0.0f, 0.0f },
+						{-sine, 0.0f, csin, 0.0f },
+						{ 0.0f, 0.0f, 0.0f, 1.0f } });
+	}
 }
 void Tetrahedron::generateFaces()
 {
@@ -384,12 +407,52 @@ void Tetrahedron::printAngles() const
 	}
 }
 
-void Tetrahedron::rotation(Vertex3D & head, Vertex3D & tail, const float radian)
+void Tetrahedron::rotation(int input, const float radian)
 {
-	const Vertex3D copiedTail = tail;
-	const Vertex3D copiedHead = head;
+	Vertex3D copiedTail;
+	Vertex3D copiedHead;
+	switch (input)
+	{
+	case 1:
+		copiedTail = vertices[0];
+		copiedTail = vertices[1];
+		break;
+	case 2:
+		copiedTail = vertices[0];
+		copiedTail = vertices[2];
+		break;
+	case 3:
+		copiedTail = vertices[0];
+		copiedTail = vertices[3];
+		break;
+	case 4:
+		copiedTail = vertices[1];
+		copiedTail = vertices[2];
+		break;
+	case 5:
+		copiedTail = vertices[1];
+		copiedTail = vertices[3];
+		break;
+	case 6:
+		copiedTail = vertices[2];
+		copiedTail = vertices[3];
+		break;
+	default:
+		return;
+	}
 	for (int i = 0; i < 4; i++) {
 		Matrix temp = getRotationMatrix(copiedHead, copiedTail, radian) * (Matrix)vertices[i];
+		vertices[i].setX(temp[0][0]);
+		vertices[i].setY(temp[1][0]);
+		vertices[i].setZ(temp[2][0]);
+	}
+	generateFaces();
+}
+
+void Tetrahedron::rotationOnAxis(unsigned char input, const float radian)
+{
+	for (int i = 0; i < 4; i++) {
+		Matrix temp = getRotationOnAxisMatrix(input, radian) * (Matrix)vertices[i];
 		vertices[i].setX(temp[0][0]);
 		vertices[i].setY(temp[1][0]);
 		vertices[i].setZ(temp[2][0]);

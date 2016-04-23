@@ -128,10 +128,12 @@ protected:
 	Matrix axisToXZPlane(const Vector3D& axis) const;
 	Matrix tailToOrigin(const Vertex3D& tail) const;
 	Matrix getRotationMatrix(const Vertex3D& head, const Vertex3D& tail, const float radian) const;
+	Matrix getRotationOnAxisMatrix(unsigned char input, const float radian);
 	void generateFaces();
 public:
 	void renderIt();
 	Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne);
 	void Tetrahedron::printAngles() const;
-	void rotation(Vertex3D& head, Vertex3D& tail, const float radian);
+	void rotation(int input, const float radian);
+	void rotationOnAxis(unsigned char input, const float radian);
 };

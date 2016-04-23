@@ -1,6 +1,7 @@
 #include <Windows.h>
 #include <iostream>
 #include <ctime>
+#define PI 3.14159265
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
@@ -74,14 +75,27 @@ void Motion(int x, int y)
 
 void Keyboard(unsigned char key, int x, int y)
 {
-	static time_t timev;
-	time(&timev);
 	switch(key)
 	{
 		case 'q': break;
-		case 'r':
-			exampleTetrahdron.rotation(vertices[0], vertices[1], 0.000000000000000000000000000000000000000001f);
-			break;
+		case '1':
+			exampleTetrahdron.rotation(1, PI / 180); break;
+		case '2':
+			exampleTetrahdron.rotation(2, PI / 180); break;
+		case '3':
+			exampleTetrahdron.rotation(3, PI / 180); break;
+		case '4':
+			exampleTetrahdron.rotation(4, PI / 180); break;
+		case '5':
+			exampleTetrahdron.rotation(5, PI / 180); break;
+		case '6':
+			exampleTetrahdron.rotation(6, PI / 180); break;
+		case 'x':
+			exampleTetrahdron.rotationOnAxis('x', PI / 180); break;
+		case 'y':
+			exampleTetrahdron.rotationOnAxis('y', PI / 180); break;
+		case 'z':
+			exampleTetrahdron.rotationOnAxis('z', PI / 180); break;
 		case VK_ESCAPE:
 			exit(0);
 		break;
