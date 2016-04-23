@@ -96,6 +96,8 @@ void Keyboard(unsigned char key, int x, int y)
 			exampleTetrahdron.rotationOnAxis('y', PI / 180); break;
 		case 'z':
 			exampleTetrahdron.rotationOnAxis('z', PI / 180); break;
+		case 'p':
+			exampleTetrahdron.printRelationshipWith(Vertex3D(20.0f, 0.0f, 0.0f)); break;
 		case VK_ESCAPE:
 			exit(0);
 		break;

@@ -64,7 +64,13 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="BasicType.cpp" />
+    <ClCompile Include="Face.cpp" />
     <ClCompile Include="Lecture2.cpp" />
+    <ClCompile Include="Matrix.cpp" />
+    <ClCompile Include="MatrixSizeDifferent.cpp" />
+    <ClCompile Include="Tetrahedron.cpp" />
+    <ClCompile Include="Vector3D.cpp" />
+    <ClCompile Include="Vertex3D.cpp" />
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BasicType.hpp" />

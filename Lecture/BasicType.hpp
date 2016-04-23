@@ -1,13 +1,5 @@
 #pragma once
-#include <Windows.h>
-#include <iostream>
-#include <string>
 #include <vector>
-#include <exception>
-#include <tuple>
-#include <GL/glut.h>
-#include <GL/gl.h>
-#include <GL/glu.h>
 using namespace std;
 class Matrix;
 class Vertex3D;
@@ -127,13 +119,14 @@ protected:
 	Matrix xzPlaneToZAxis(const Vector3D& axis) const;
 	Matrix axisToXZPlane(const Vector3D& axis) const;
 	Matrix tailToOrigin(const Vertex3D& tail) const;
-	Matrix getRotationMatrix(const Vertex3D& head, const Vertex3D& tail, const float radian) const;
+	Matrix getRotationMatrix(const Vertex3D head, const Vertex3D tail, const float radian) const;
 	Matrix getRotationOnAxisMatrix(unsigned char input, const float radian);
 	void generateFaces();
 public:
 	void renderIt();
 	Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne);
-	void Tetrahedron::printAngles() const;
+	void printAngles() const;
+	void printRelationshipWith(const Vertex3D& with);
 	void rotation(int input, const float radian);
 	void rotationOnAxis(unsigned char input, const float radian);
 };
