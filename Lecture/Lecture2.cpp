@@ -31,10 +31,8 @@ void Render(void)
 	glVertex3f(0.0f, 0.0f, 10.0f);
 	glEnd();
 	exampleTetrahdron.renderIt();
-
 	glutSwapBuffers();
 }
-
 void Reshape(int w, int h)
 {
 	glViewport(0, 0, w, h);

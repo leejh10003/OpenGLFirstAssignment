@@ -1,7 +1,50 @@
 #include <cmath>
 #include <iostream>
 #include <string>
+#include <tuple>
 #include "BasicType.hpp"
+using namespace std;
+tuple<int, int> MatrixSizeDifferent::errorSize() const
+{
+	return tuple<int, int>(former, latter);
+}
+void MatrixSizeDifferent::printError(string kind) const
+{
+	cerr << "Wrong dimension size (n," << former << "), (" << latter << ", n) between"<< kind << endl;
+}
+ const vector<float>& Matrix::operator[](int i) const
+{
+	return matrix[i];
+}
+void Matrix::sizeCheck(const Matrix& latter) const
+{
+	try {
+		if (this->matrix[0].size() != latter.size())
+			throw MatrixSizeDifferent(matrix[0].size(),latter.size());
+	}
+	catch (MatrixSizeDifferent e)
+	{
+		e.printError("Matrix and Matrix");
+		exit(-1);
+	}
+}
+int Matrix::size() const
+{
+	return matrix.size();
+}
+Matrix Matrix::operator*(const Matrix& latter) const
+{
+	sizeCheck(latter);
+	int coDim = latter.size();
+	int formerDim = matrix.size();
+	int latterDim = latter[0].size();
+	vector<vector<float>> producted(formerDim, vector<float>(latterDim, 0.0f));
+	for (int i = 0; i < formerDim; i++)
+		for (int j = 0; j < latterDim; j++)
+			for (int k = 0; k < coDim; k++)
+				producted[i][j] += matrix[i][k] * latter[k][j];
+	return producted;
+}
 Vertex3D::Vertex3D() : x(0.0f), y(0.0f), z(0.0f) {}
 Vertex3D::Vertex3D(float xInput, float yInput, float zInput) :x(xInput), y(yInput), z(zInput) {}
 Vertex3D::Vertex3D(const Vertex3D &input)
@@ -61,7 +104,7 @@ float Vertex3D::angleBetween(const Vertex3D& former, const Vertex3D& latter) con
 {
 	return (former - (*this)) * (latter - (*this));
 }
-std::string Vertex3D::getAngleInformation(const Vertex3D& former, const Vertex3D& latter) const
+string Vertex3D::getAngleInformation(const Vertex3D& former, const Vertex3D& latter) const
 {
 	if (angleBetween(former, latter) > 0)
 		return "Acute";
@@ -122,7 +165,7 @@ Face::Face(const Vertex3D(&input)[3], const float(&givenFaceColor)[4], const Ver
 	determineDirection();
 	getD();
 	getEndOfNormalVector();
-	//std::cout << directionCorrectedNormal.getX() << "x + " << directionCorrectedNormal.getY() << "y + " << directionCorrectedNormal.getZ() << "z + " << d << std::endl;
+	//cout << directionCorrectedNormal.getX() << "x + " << directionCorrectedNormal.getY() << "y + " << directionCorrectedNormal.getZ() << "z + " << d << endl;
 }
 Face::Face()
 {
@@ -179,9 +222,9 @@ void Face::renderIt()
 }
 void Face::printRelationshipBetweenEdge() const
 {
-	std::cout << "Angle0: " << vertices[0].getAngleInformation(vertices[1], vertices[2]) << std::endl;
-	std::cout << "Angle1: " << vertices[1].getAngleInformation(vertices[0], vertices[2]) << std::endl;
-	std::cout << "Angle2: " << vertices[2].getAngleInformation(vertices[0], vertices[1]) << std::endl;
+	cout << "Angle0: " << vertices[0].getAngleInformation(vertices[1], vertices[2]) << endl;
+	cout << "Angle1: " << vertices[1].getAngleInformation(vertices[0], vertices[2]) << endl;
+	cout << "Angle2: " << vertices[2].getAngleInformation(vertices[0], vertices[1]) << endl;
 }
 float Face::relationsBetweenVertex(const Vertex3D& with)
 {
@@ -198,10 +241,10 @@ Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryO
 	faces[1] = Face({ vertices[0], vertices[2], vertices[3] }, { 0.0f, 1.0f, 0.0f, 1.0f }, vertices[1]);
 	faces[2] = Face({ vertices[0], vertices[3], vertices[1] }, { 0.0f, 0.0f, 1.0f, 1.0f }, vertices[2]);
 	faces[3] = Face({ vertices[1], vertices[3], vertices[2] }, { 1.0f, 1.0f, 0.0f, 1.0f }, vertices[0]);
-	std::cout << ((faces[0].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << std::endl;
-	std::cout << ((faces[1].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << std::endl;
-	std::cout << ((faces[2].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << std::endl;
-	std::cout << ((faces[3].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << std::endl;
+	cout << ((faces[0].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << endl;
+	cout << ((faces[1].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << endl;
+	cout << ((faces[2].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << endl;
+	cout << ((faces[3].relationsBetweenVertex(arbitraryOuterOne) > 0) ? "Positive" : "Negative") << endl;
 	printAngles();
 }
 void Tetrahedron::renderIt()
@@ -212,7 +255,7 @@ void Tetrahedron::renderIt()
 void Tetrahedron::printAngles() const
 {
 	for (int i = 0; i < 4; ++i) {
-		std::cout << "Face" << i << ":" << std::endl;
+		cout << "Face" << i << ":" << endl;
 		faces[i].printRelationshipBetweenEdge();
 	}
 }

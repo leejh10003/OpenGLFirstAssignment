@@ -2,13 +2,42 @@
 #include <Windows.h>
 #include <iostream>
 #include <string>
+#include <vector>
+#include <exception>
+#include <tuple>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+using namespace std;
+class Matrix;
 class Vertex3D;
 class Vector3D;
 class Face;
 class Tetrahderon;
+class Matrix;
+class MatrixSizeDifferent;
+class MatrixSizeDifferent : exception
+{
+protected:
+	int former;
+	int latter;
+public:
+	MatrixSizeDifferent(int former, int latter) : former(former), latter(latter) {};
+	tuple<int, int> errorSize() const;
+	void printError(string kind) const;
+};
+class Matrix
+{
+protected:
+	vector<vector<float>> matrix;
+	void sizeCheck(const Matrix& latter) const;
+public:
+	Matrix() {};
+	Matrix(vector<vector<float>> matrix) : matrix(matrix) {};
+	Matrix operator*(const Matrix& latter) const;
+	const vector<float>& operator[](int i) const;
+	int size() const;
+};
 class Vertex3D
 {
 protected:
@@ -28,7 +57,7 @@ public:
 	float distanceTo(const Vertex3D& to) const;
 	Vertex3D getNearOneBetween(const Vertex3D& former, const Vertex3D& latter) const;
 	float angleBetween(const Vertex3D& former, const Vertex3D& latter) const;
-	std::string getAngleInformation(const Vertex3D& former, const Vertex3D& latter) const;
+	string getAngleInformation(const Vertex3D& former, const Vertex3D& latter) const;
 	float getX() const;
 	float getY() const;
 	float getZ() const;
@@ -93,4 +122,5 @@ public:
 	void renderIt();
 	Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne);
 	void Tetrahedron::printAngles() const;
+	void rotation();
 };
