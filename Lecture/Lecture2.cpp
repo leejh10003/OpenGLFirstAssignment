@@ -1,22 +1,22 @@
 #include <Windows.h>
 #include <iostream>
+#include <ctime>
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
 #include "BasicType.hpp"
 using namespace std;
 
+static Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
+Vertex3D(0.0f,5.0f,0.0f),
+Vertex3D(0.0f,0.0f,5.0f),
+Vertex3D(-5.0f,-5.0f,0.0f) };
+static Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
 void Render(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
 	glLoadIdentity();	
 	gluLookAt(0.0f, 0.0f, 20.0f, 0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 0.0f);
-	static Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
-							 Vertex3D(0.0f,5.0f,0.0f),
-							 Vertex3D(0.0f,0.0f,5.0f),
-							 Vertex3D(-5.0f,-5.0f,0.0f)};
-	static Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
-	exampleTetrahdron.rotation(vertices[0], vertices[1], 0.1);
 	glLineWidth(1.0f);
 	glColor4f(1.0f, 1.0f,1.0f, 1.0f);
 	glBegin(GL_LINES);
@@ -74,9 +74,14 @@ void Motion(int x, int y)
 
 void Keyboard(unsigned char key, int x, int y)
 {
+	static time_t timev;
+	time(&timev);
 	switch(key)
 	{
-		case 'q':
+		case 'q': break;
+		case 'r':
+			exampleTetrahdron.rotation(vertices[0], vertices[1], 0.000000000000000000000000000000000000000001f);
+			break;
 		case VK_ESCAPE:
 			exit(0);
 		break;
@@ -97,7 +102,6 @@ void SpecialKey(int key, int x, int y)
 
 void Idle(void)
 {
-	
 	glutPostRedisplay();
 }
 int main(int argc, char ** argv)

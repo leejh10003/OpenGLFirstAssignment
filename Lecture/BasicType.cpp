@@ -93,7 +93,7 @@ Vertex3D::operator const Vector3D() const
 }
 Vertex3D::operator const Matrix() const
 {
-	vector<vector<float>> produced(4, vector<float>());
+	vector<vector<float>> produced(4, vector<float>(1));
 	produced[0][0] = x;
 	produced[1][0] = y;
 	produced[2][0] = z;
