@@ -1,5 +1,7 @@
 #include <Windows.h>
+#include <string>
 #include <iostream>
+#include <fstream>
 #include <ctime>
 #define PI 3.14159265
 #include <GL/glut.h>
@@ -8,11 +10,8 @@
 #include "BasicType.hpp"
 using namespace std;
 
-static Vertex3D vertices[4] = { Vertex3D(5.0f,-5.0f,0.0f),
-Vertex3D(0.0f,5.0f,0.0f),
-Vertex3D(0.0f,0.0f,5.0f),
-Vertex3D(-5.0f,-5.0f,0.0f) };
-static Tetrahedron exampleTetrahdron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
+static Vertex3D vertices[4];
+static Tetrahedron exampleTetrahdron;
 void Render(void)
 {
 	glClear(GL_COLOR_BUFFER_BIT|GL_DEPTH_BUFFER_BIT);
@@ -120,8 +119,33 @@ void Idle(void)
 {
 	glutPostRedisplay();
 }
+//read object in text file format and generate tetrahedron mesh
+void readInputText(void)
+{
+	ifstream verticesData("input.txt", ios::in);
+	string inputString(istreambuf_iterator<char>(verticesData), (istreambuf_iterator<char>()));
+	float arr[12];
+	int i = 0;
+	while (true)
+	{
+		size_t index = inputString.find(",");
+		if (index == string::npos)
+			break;
+		float readed = atof(inputString.substr(0, index).c_str());
+		cout << readed << endl;
+		arr[i] = readed;
+		inputString = inputString.substr(index + 1, inputString.length());
+		i++;
+	}
+	vertices[0] = Vertex3D(arr[0], arr[1], arr[2]);
+	vertices[1] = Vertex3D(arr[3], arr[4], arr[5]);
+	vertices[2] = Vertex3D(arr[6], arr[7], arr[8]);
+	vertices[3] = Vertex3D(arr[9], arr[10], arr[11]);
+	exampleTetrahdron = Tetrahedron(vertices, Vertex3D(10.0f, 10.0f, 10.0f));
+}
 int main(int argc, char ** argv)
 {
+	readInputText();
 	glutInit(&argc, argv);
 	
 	glutInitDisplayMode(GLUT_RGBA | GLUT_DEPTH | GLUT_DOUBLE);

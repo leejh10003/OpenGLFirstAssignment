@@ -3,6 +3,7 @@
 #include <GL/glut.h>
 #include <GL/gl.h>
 #include <GL/glu.h>
+Tetrahedron::Tetrahedron(){}
 Tetrahedron::Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne)
 {
 	for (int i = 0; i < 4; i++) {
@@ -108,6 +109,9 @@ Matrix Tetrahedron::tailToOrigin(const Vertex3D & tail) const
 	{ 0.0f, 0.0f, 1.0f, -tail.getZ() },
 	{ 0.0f, 0.0f, 0.0f, 1.0f } });
 }
+/*
+	Generate the rotation matrix in arbitrary axis. Each function in return state get the matrix in each transforming steps.
+*/
 Matrix Tetrahedron::getRotationMatrix(const Vertex3D head, const Vertex3D tail, const float radian) const
 {
 	Vector3D axis = head - tail;

@@ -8,15 +8,15 @@ Vertex3D::Vertex3D(const Vertex3D &input)
 	z = input.getZ();
 }
 
-Vector3D Vertex3D::operator-(const Vertex3D& latter) const
-{
-	return Vector3D(x - latter.getX(),
-		y - latter.getY(),
-		z - latter.getZ());
-}
 Vertex3D Vertex3D::operator-(const Vector3D& latter) const
 {
 	return Vertex3D(x - latter.getX(),
+		y - latter.getY(),
+		z - latter.getZ());
+}
+Vector3D Vertex3D::operator-(const Vertex3D& latter) const
+{
+	return Vector3D(x - latter.getX(),
 		y - latter.getY(),
 		z - latter.getZ());
 }

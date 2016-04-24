@@ -8,6 +8,14 @@ class Face;
 class Tetrahderon;
 class Matrix;
 class MatrixSizeDifferent;
+
+
+
+
+
+/*
+ This Class is exception hadler for Matrix multiplication which has different dimension size in which desired to be equal
+ */
 class MatrixSizeDifferent : exception
 {
 protected:
@@ -18,6 +26,14 @@ public:
 	tuple<int, int> errorSize() const;
 	void printError(string kind) const;
 };
+
+
+
+
+
+/*
+ This class is Mathmatical matrix for matrix product
+ */
 class Matrix
 {
 protected:
@@ -30,6 +46,14 @@ public:
 	const vector<float>& operator[](int i) const;
 	int size() const;
 };
+
+
+
+
+
+/*
+	This class is vertex class which will corresponds to points in 3-dimension space
+*/
 class Vertex3D
 {
 protected:
@@ -58,6 +82,14 @@ public:
 	void setY(float input);
 	void setZ(float input);
 };
+
+
+
+
+
+/*
+	This class is vector class that will corresponds displacement, Direction etc. in 3-dimension space
+*/
 class Vector3D
 {
 protected:
@@ -79,7 +111,20 @@ public:
 	float getY() const;
 	float getZ() const;
 };
+
+
+
+
+
 Vector3D crossProduct(const Vector3D &former, const Vector3D &latter);
+
+
+
+
+
+/*
+	This class stands for face determined by three point
+*/
 class Face
 {
 protected:
@@ -106,6 +151,13 @@ protected:
 	void getEndOfNormalVector();
 	void getD();
 };
+
+
+
+
+/*
+	This class stands for tetrahedron mesh.
+*/
 class Tetrahedron
 {
 protected:
@@ -124,6 +176,7 @@ protected:
 	void generateFaces();
 public:
 	void renderIt();
+	Tetrahedron();
 	Tetrahedron(Vertex3D(&inputVertices)[4], const Vertex3D& arbitraryOuterOne);
 	void printAngles() const;
 	void printRelationshipWith(const Vertex3D& with);
