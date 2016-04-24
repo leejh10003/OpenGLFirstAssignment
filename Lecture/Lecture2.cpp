@@ -132,7 +132,6 @@ void readInputText(void)
 		if (index == string::npos)
 			break;
 		float readed = atof(inputString.substr(0, index).c_str());
-		cout << readed << endl;
 		arr[i] = readed;
 		inputString = inputString.substr(index + 1, inputString.length());
 		i++;
